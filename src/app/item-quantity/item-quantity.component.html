@@ -1,0 +1,54 @@
+<div class="text-center" *ngIf="isLoading">
+  <div class="spinner-border text-primary" role="status"  style="width: 3rem; height: 3rem;">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<div class="container" *ngIf="!isLoading">
+  <div class="row justify-content-end" style="padding-top: 20px; padding-bottom: 20px;">
+    <div class="col-3 col-md-2 col-xl-1" style="padding: 0;">
+      <button type="button" style="margin: 0;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">New Item</button>
+    </div>
+    <div class="col-4 col-md-3 col-xl-2" style="padding-left: 0;">
+      <input (input)="filterItems($event)" class="form-control" placeholder="Search By Name"/>
+    </div>
+  </div>
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Item</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Average Rate</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr routerLink="{{item._id}}" class="pointer" *ngFor="let item of filteredItems; let i=index">
+        <th scope="row">{{i+1}}</th>
+        <td>{{item.name}}</td>
+        <td>{{item.quantity}}</td>
+        <td>{{item.avgRate}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+  <form [formGroup] = "form" (ngSubmit)="addNewItem()">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">New Item</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group input-group-sm mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-sm">Item Name</span>
+          <input type="text" formControlName="name" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Add</button>
+      </div>
+    </div>
+  </div>
+  </form>
+</div>

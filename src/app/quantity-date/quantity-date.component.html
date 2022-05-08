@@ -1,0 +1,143 @@
+<div class="text-center" *ngIf="isLoading || !isItemDetailsFetched">
+  <div class="spinner-border text-primary" role="status"  style="width: 3rem; height: 3rem;">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<div class="container" style="padding-top: 20px; padding-bottom: 20px;" *ngIf="!isLoading && isItemDetailsFetched">
+  <div class="row">
+    <div class="col">
+      <span class="far fa-arrow-alt-circle-left fa-3x pointer" (click)="back()"></span>
+    </div>
+    <div class="col">
+      <h2 style="text-align: center;" data-bs-toggle="modal" data-bs-target="#editItemName" class="pointer">{{item.name}}</h2>
+    </div>
+    <div class="col">
+      <p style="text-align: right;">
+        <button type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#deleteItem">Delete Item</button>
+        <button type="button" style="margin-left: 20px;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">New Entry</button>
+      </p>
+    </div>
+  </div>
+</div>
+<div class="container" *ngIf="!isLoading && isItemDetailsFetched">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Date</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Rate</th>
+        <th scope="col">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="pointer" data-bs-toggle="modal" data-bs-target="#editModal" (click)="setDateQuantity(item)" *ngFor="let item of dateQuantities; let i=index">
+        <th scope="row">{{i+1}}</th>
+        <td>{{item.date}}</td>
+        <td>{{item.quantity}}</td>
+        <td>{{item.rate}}</td>
+        <td>{{item.amount}}</td>
+      </tr>
+      <tr *ngIf="dateQuantities.length">
+        <td></td>
+        <td><strong>TOTAL</strong></td>
+        <td>{{item.quantity}}</td>
+        <td><strong>AVG:</strong>{{item.avgRate}}</td>
+        <td>{{item.totalAmount}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Date: {{dateQuantity? dateQuantity.date: ''}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group input-group-default mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-default">Quantity</span>
+          <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="{{dateQuantity? dateQuantity.quantity: ''}}" #quantity>
+        </div>
+        <div class="input-group input-group-default mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-default">Rate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="{{dateQuantity? dateQuantity.rate: ''}}" #rate>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" (click)="editDateQuantity(quantity.value, rate.value)">Save</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="delete()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+  <form [formGroup] = "form" (ngSubmit)="addDateQuantity()">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">New Entry</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group input-group-default mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-default">Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <input type="date" class="form-control" formControlName="date" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="{{currentDate}}">
+        </div>
+        <div class="input-group input-group-default mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-default">Quantity</span>
+          <input type="number" formControlName="quantity" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+        </div>
+        <div class="input-group input-group-default mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-default">Rate &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <input type="number" formControlName="rate" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Add</button>
+      </div>
+    </div>
+  </div>
+  </form>
+</div>
+
+<div class="modal fade" id="editItemName" tabindex="-1" aria-labelledby="editItemName" aria-hidden="true" *ngIf="!isLoading && isItemDetailsFetched">
+  <form [formGroup] = "itemForm" (ngSubmit)="editItemName(name)">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="EditItemNameLabel">Edit Item Name</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group input-group-default mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-default">Name</span>
+          <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="{{item? item.name : ''}}" #name>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
+      </div>
+    </div>
+  </div>
+  </form>
+</div>
+
+<div class="modal fade" id="deleteItem" tabindex="-1" aria-labelledby="deleteItem" aria-hidden="true" *ngIf="!isLoading && isItemDetailsFetched">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteItem">DeleteItem</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Do you want to delete this item?
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteItem()">Delete</button>
+      </div>
+    </div>
+</div>

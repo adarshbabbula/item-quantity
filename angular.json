@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "quuantity-list": {
+    "item-quantity": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/quuantity-list",
+            "outputPath": "dist/item-quantity",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -62,18 +62,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "quuantity-list:build"
+            "browserTarget": "item-quantity:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "quuantity-list:build:production"
+              "browserTarget": "item-quantity:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "quuantity-list:build"
+            "browserTarget": "item-quantity:build"
           }
         },
         "test": {
@@ -110,15 +110,19 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "quuantity-list:serve"
+            "devServerTarget": "item-quantity:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "quuantity-list:serve:production"
+              "devServerTarget": "item-quantity:serve:production"
             }
           }
         }
       }
-    }},
-  "defaultProject": "quuantity-list"
+    }
+  },
+  "defaultProject": "item-quantity",
+  "cli": {
+    "analytics": false
+  }
 }
